@@ -5,7 +5,7 @@ A dynamic recurring date picker built with vanilla JavaScript, HTML, and CSS tha
 
 ## 🔗 Live Demo
 
-👉 [Click here to try it out](https://heartfelt-tulumba-b867b4.netlify.app/)
+👉 [Click here to try it out](https://pickrepeatdate.netlify.app/)
 
 ## Features
 
