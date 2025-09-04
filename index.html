@@ -1,16 +1,205 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recurring Date Picker</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel" src="app.js"></script>
+    <div class="min-h-screen py-8" style="background-color: var(--color-background);">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <header class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        Recurring Date Picker
+                    </h1>
+                    <p class="text-gray-600">
+                        Create and preview recurring date patterns
+                    </p>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Panel - Configuration -->
+                    <div class="card">
+                        <div class="card__body">
+                            <!-- Recurrence Type Selector -->
+                            <div class="mb-6">
+                                <h3 class="section-title">Recurrence Type</h3>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="recurrenceType" value="daily">
+                                        <span>Daily</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="recurrenceType" value="weekly" checked>
+                                        <span>Weekly</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="recurrenceType" value="monthly">
+                                        <span>Monthly</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="recurrenceType" value="yearly">
+                                        <span>Yearly</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="divider"></div>
+                            
+                            <!-- Recurrence Options -->
+                            <div class="mb-6">
+                                <h3 class="section-title">Options</h3>
+                                
+                                <!-- Interval (common to all) -->
+                                <div class="form-row" id="interval-row">
+                                    <label>Every</label>
+                                    <input type="number" min="1" max="100" value="1" id="interval-input" class="form-control" style="width: 80px;">
+                                    <span id="interval-unit">week</span>
+                                </div>
+                                
+                                <!-- Weekly Options -->
+                                <div id="weekly-options">
+                                    <label class="form-label">Days of the week</label>
+                                    <div class="weekday-selector">
+                                        <button type="button" class="weekday-button" data-day="0">Sun</button>
+                                        <button type="button" class="weekday-button selected" data-day="1">Mon</button>
+                                        <button type="button" class="weekday-button" data-day="2">Tue</button>
+                                        <button type="button" class="weekday-button" data-day="3">Wed</button>
+                                        <button type="button" class="weekday-button" data-day="4">Thu</button>
+                                        <button type="button" class="weekday-button" data-day="5">Fri</button>
+                                        <button type="button" class="weekday-button" data-day="6">Sat</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Monthly Options -->
+                                <div id="monthly-options" class="hidden">
+                                    <div class="form-row">
+                                        <label>
+                                            <input type="radio" name="monthlyType" value="day" checked>
+                                            <span style="margin-left: 6px;">On day</span>
+                                        </label>
+                                        <input type="number" min="1" max="31" value="1" id="month-day-input" class="form-control" style="width: 80px;">
+                                        <span>of the month</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>
+                                            <input type="radio" name="monthlyType" value="weekday">
+                                            <span style="margin-left: 6px;">On the</span>
+                                        </label>
+                                        <select id="month-week-select" class="form-control" disabled>
+                                            <option value="first">First</option>
+                                            <option value="second">Second</option>
+                                            <option value="third">Third</option>
+                                            <option value="fourth">Fourth</option>
+                                            <option value="last">Last</option>
+                                        </select>
+                                        <select id="month-week-day-select" class="form-control" disabled>
+                                            <option value="sunday">Sunday</option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            <option value="saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="divider"></div>
+                            
+                            <!-- Date Range Picker -->
+                            <div class="mb-6">
+                                <h3 class="section-title">Date Range</h3>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" id="start-date-input" class="form-control">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">End Condition</label>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" name="endType" value="never" checked>
+                                            <span>Never ends</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="endType" value="on">
+                                            <span>On date</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="endType" value="after">
+                                            <span>After occurrences</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="end-date-container" class="hidden mt-2">
+                                        <input type="date" id="end-date-input" class="form-control">
+                                    </div>
+                                    
+                                    <div id="end-occurrences-container" class="hidden flex items-center gap-2 mt-2">
+                                        <input type="number" min="1" max="1000" value="10" id="end-occurrences-input" class="form-control" style="width: 100px;">
+                                        <span>occurrences</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Panel - Preview -->
+                    <div>
+                        <div class="mb-6">
+                            <h3 class="section-title">Calendar Preview</h3>
+                            <div class="card">
+                                <div class="card__body">
+                                    <div id="calendar-header" class="calendar-header">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                    
+                                    <div class="calendar-weekdays">
+                                        <div class="calendar-weekday">Su</div>
+                                        <div class="calendar-weekday">Mo</div>
+                                        <div class="calendar-weekday">Tu</div>
+                                        <div class="calendar-weekday">We</div>
+                                        <div class="calendar-weekday">Th</div>
+                                        <div class="calendar-weekday">Fr</div>
+                                        <div class="calendar-weekday">Sa</div>
+                                    </div>
+                                    
+                                    <div id="calendar-grid" class="calendar-grid">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                    
+                                    <div class="preview-legend">
+                                        <div class="legend-item">
+                                            <div class="legend-dot start"></div>
+                                            <span>Start Date</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-dot recurring"></div>
+                                            <span>Recurring Dates</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pattern Summary -->
+                <div class="mt-8">
+                    <div id="pattern-summary" class="pattern-preview">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
 </body>
 </html>
