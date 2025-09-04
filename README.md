@@ -1,6 +1,11 @@
 # Recurring Date Picker
 
 A dynamic recurring date picker built with vanilla JavaScript, HTML, and CSS that enables users to configure and preview complex recurrence rules including daily, weekly, monthly, and yearly patterns.
+---
+
+## 🔗 Live Demo
+
+👉 [Click here to try it out](https://heartfelt-tulumba-b867b4.netlify.app/)
 
 ## Features
 
