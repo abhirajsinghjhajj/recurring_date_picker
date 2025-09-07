@@ -1,4 +1,3 @@
-// Constants
 const WEEK_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_WEEK_OPTIONS = ["first", "second", "third", "fourth", "last"];
 const RECURRENCE_TYPES = ["daily", "weekly", "monthly", "yearly"];
@@ -7,15 +6,14 @@ const MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ];
 
-// State
 let state = {
     recurrenceType: 'weekly',
     interval: 1,
-    weekDays: [1], // Monday by default
+    weekDays: [1],
     monthDay: 1,
     monthWeek: null,
     monthWeekDay: null,
-    startDate: new Date(2025, 8, 4), // September 04, 2025
+    startDate: new Date(2025, 8, 4),
     endType: 'never',
     endDate: null,
     endOccurrences: 10
@@ -23,7 +21,6 @@ let state = {
 
 let currentMonth = new Date(state.startDate);
 
-// Utility functions (copied from app.js)
 const generateRecurringDates = (config, maxDates = 50) => {
     const dates = [];
     const { recurrenceType, interval, weekDays, monthDay, monthWeek, monthWeekDay, startDate, endType, endDate, endOccurrences } = config;
@@ -186,7 +183,6 @@ const getOrdinalSuffix = (num) => {
     return 'th';
 };
 
-// Update functions
 function updateState(updates) {
     Object.assign(state, updates);
     updateUI();
@@ -244,7 +240,6 @@ function updateEndConditionVisibility() {
 }
 
 function updateCalendarPreview() {
-    // Update header
     const header = document.getElementById('calendar-header');
     header.innerHTML = `
         <button class="calendar-nav-btn" id="prev-month">←</button>
@@ -252,11 +247,9 @@ function updateCalendarPreview() {
         <button class="calendar-nav-btn" id="next-month">→</button>
     `;
 
-    // Add listeners (since innerHTML resets)
     document.getElementById('prev-month').addEventListener('click', () => navigateMonth(-1));
     document.getElementById('next-month').addEventListener('click', () => navigateMonth(1));
 
-    // Generate grid
     const grid = document.getElementById('calendar-grid');
     grid.innerHTML = '';
     const days = getDaysInMonth(currentMonth);
@@ -339,27 +332,22 @@ function updatePatternSummary() {
     summary.innerHTML = html;
 }
 
-// Event listeners setup
 function init() {
-    // Set initial values
     document.getElementById('interval-input').value = state.interval;
     document.getElementById('start-date-input').value = formatDateForInput(state.startDate);
     document.getElementById('end-occurrences-input').value = state.endOccurrences;
     document.getElementById('month-day-input').value = state.monthDay;
 
-    // Recurrence type radios
     document.querySelectorAll('input[name="recurrenceType"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             updateState({ recurrenceType: e.target.value });
         });
     });
 
-    // Interval input
     document.getElementById('interval-input').addEventListener('change', (e) => {
         updateState({ interval: parseInt(e.target.value) || 1 });
     });
 
-    // Weekday buttons
     document.querySelectorAll('.weekday-button').forEach(btn => {
         btn.addEventListener('click', () => {
             const dayIndex = parseInt(btn.dataset.day);
@@ -373,7 +361,6 @@ function init() {
         });
     });
 
-    // Monthly type radios
     document.querySelectorAll('input[name="monthlyType"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'day') {
@@ -384,22 +371,18 @@ function init() {
         });
     });
 
-    // Month day input
     document.getElementById('month-day-input').addEventListener('change', (e) => {
         updateState({ monthDay: parseInt(e.target.value) || 1 });
     });
 
-    // Month week select
     document.getElementById('month-week-select').addEventListener('change', (e) => {
         updateState({ monthWeek: e.target.value });
     });
 
-    // Month week day select
     document.getElementById('month-week-day-select').addEventListener('change', (e) => {
         updateState({ monthWeekDay: e.target.value });
     });
 
-    // Start date
     document.getElementById('start-date-input').addEventListener('change', (e) => {
         const date = new Date(e.target.value);
         updateState({ startDate: date });
@@ -407,25 +390,21 @@ function init() {
         updateUI();
     });
 
-    // End type radios
     document.querySelectorAll('input[name="endType"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             updateState({ endType: e.target.value });
         });
     });
 
-    // End date
     document.getElementById('end-date-input').addEventListener('change', (e) => {
         const date = e.target.value ? new Date(e.target.value) : null;
         updateState({ endDate: date });
     });
 
-    // End occurrences
     document.getElementById('end-occurrences-input').addEventListener('change', (e) => {
         updateState({ endOccurrences: parseInt(e.target.value) || 1 });
     });
 
-    // Initial update
     updateUI();
 }
 
@@ -434,5 +413,4 @@ function formatDateForInput(date) {
     return date.toISOString().split('T')[0];
 }
 
-// Run init on load
 document.addEventListener('DOMContentLoaded', init);
